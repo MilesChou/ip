@@ -24,6 +24,20 @@ class V4 implements CollectionInterface
         return $this;
     }
 
+    /**
+     * Add the loopback IP
+     *
+     * @see https://datatracker.ietf.org/doc/html/rfc6890
+     */
+    public function addLoopbackIp(): self
+    {
+        $this->add([
+            [2130706432, 2147483647],   // 127.0.0.0    -   127.255.255.255
+        ]);
+
+        return $this;
+    }
+
     public function has(string $ip): bool
     {
         return null !== $this->find(ip2long($ip));

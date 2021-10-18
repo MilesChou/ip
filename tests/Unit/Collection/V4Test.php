@@ -43,6 +43,17 @@ class V4Test extends TestCase
     /**
      * @test
      */
+    public function shouldReturnTrueWhenUsingLoopbackIp(): void
+    {
+        $this->target->addLoopbackIp();
+
+        $this->assertTrue($this->target->has('127.0.0.0'));
+        $this->assertTrue($this->target->has('127.255.255.255'));
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnTrueWhenUsingPrivateIp(): void
     {
         $this->target->addPrivateIp();
@@ -57,16 +68,13 @@ class V4Test extends TestCase
      */
     public function shouldReturnFalseWhenFlush(): void
     {
-        $this->target->addPrivateIp();
+        // 2130706433 means 127.0.0.1
+        $this->target->add([[2130706433, 2130706433]]);
 
-        $this->assertTrue($this->target->has('10.11.12.13'));
-        $this->assertTrue($this->target->has('172.22.4.1'));
-        $this->assertTrue($this->target->has('192.168.200.100'));
+        $this->assertTrue($this->target->has('127.0.0.1'));
 
         $this->target->flush();
 
-        $this->assertFalse($this->target->has('10.11.12.13'));
-        $this->assertFalse($this->target->has('172.22.4.1'));
-        $this->assertFalse($this->target->has('192.168.200.100'));
+        $this->assertFalse($this->target->has('127.0.0.1'));
     }
 }
