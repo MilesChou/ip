@@ -5,18 +5,50 @@ namespace MilesChou\Ip;
 class Range
 {
     /**
-     * Build ip range data by IP
+     * Sort range list
+     *
+     * @param array $range Range list
+     * @return array
      */
-    public static function buildByIp(string $start, string $end): array
+    public static function sort(array $range): array
     {
-        return self::buildByLong(ip2long($start), ip2long($end));
+        usort($range, static function ($a, $b) {
+            return $a[0] <=> $b[0];
+        });
+
+        return $range;
     }
 
     /**
-     * Build ip range data by Long
+     * Find index in range data by IP long
+     *
+     * @param int $ip IP use long int
+     * @param array $range Sorted range list
+     * @return int|null
      */
-    public static function buildByLong(int $start, int $end): array
+    public static function search(int $ip, array $range): ?int
     {
-        return [$start, $end];
+        $found = null;
+
+        // Binary search
+        $low = 0;
+        $upper = count($range) - 1;
+
+        while ($low <= $upper) {
+            $mid = (int)(($low + $upper) / 2);
+
+            if ($ip >= $range[$mid][0] && $ip <= $range[$mid][1]) {
+                $found = $mid;
+                break;
+            }
+
+            if ($ip > $range[$mid][1]) {
+                $low = $mid + 1;
+            } elseif ($ip < $range[$mid][0]) {
+                $upper = $mid - 1;
+            }
+        }
+
+        return $found;
     }
 }

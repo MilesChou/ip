@@ -21,3 +21,6 @@ test: clean check
 
 coverage: test
 	@if [ "`uname`" = "Darwin" ]; then open build/coverage/index.html; fi
+
+bench:
+	php vendor/bin/phpbench run tests/Benchmark --report=default
