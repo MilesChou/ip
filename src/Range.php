@@ -5,18 +5,52 @@ namespace MilesChou\Ip;
 class Range
 {
     /**
-     * Sort range list
+     * Merge list
      *
-     * @param array $range Range list
+     * @param array $list Range list
      * @return array
      */
-    public static function sort(array $range): array
+    public static function merge(array $list): array
     {
-        usort($range, static function ($a, $b) {
+        return array_reduce(self::sort($list), static function (array $carry, array $value) {
+            if (empty($carry)) {
+                $carry[] = $value;
+
+                return $carry;
+            }
+
+            $last = end($carry);
+
+            if ($last[1] + 1 >= (int)$value[0]) {
+                array_pop($carry);
+
+                $carry[] = [$last[0], $value[1]];
+            } else {
+                $carry[] = $value;
+            }
+
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * Sort list
+     *
+     * @param array $list
+     * @param bool $merge
+     * @return array
+     */
+    public static function sort(array $list, bool $merge = false): array
+    {
+        usort($list, static function ($a, $b) {
             return $a[0] <=> $b[0];
         });
 
-        return $range;
+        if ($merge) {
+            $list = self::merge($list);
+        }
+
+        return $list;
     }
 
     /**
