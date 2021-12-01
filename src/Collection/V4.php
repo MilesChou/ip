@@ -21,7 +21,17 @@ class V4 implements CollectionInterface
      */
     public function add(array $list): V4
     {
-        $this->list = Range::merge($this->list + $list);
+        $map = array_map(function ($v) {
+            return Cidr::isValid($v) ?
+                Cidr::toRange($v) :
+                $v;
+        }, $list);
+
+        $filtered = array_filter($map, function ($v) {
+            return Range::isValid($v);
+        });
+
+        $this->list = Range::merge($this->list + array_values($filtered));
 
         return $this;
     }
