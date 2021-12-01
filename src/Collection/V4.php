@@ -4,13 +4,27 @@ declare(strict_types=1);
 
 namespace MilesChou\Ip\Collection;
 
+use MilesChou\Ip\Range;
+
 class V4 implements CollectionInterface
 {
-    use CollectionTrait;
+    /**
+     * @var array
+     */
+    private $list = [];
 
     /**
-     * Add the private IP
-     *
+     * @param array $list
+     * @return $this
+     */
+    public function add(array $list): V4
+    {
+        $this->list = Range::sort($this->list + $list);
+
+        return $this;
+    }
+
+    /**
      * @see https://datatracker.ietf.org/doc/html/rfc1918
      */
     public function addPrivateIp(): self
@@ -25,8 +39,6 @@ class V4 implements CollectionInterface
     }
 
     /**
-     * Add the loopback IP
-     *
      * @see https://datatracker.ietf.org/doc/html/rfc6890
      */
     public function addLoopbackIp(): self
@@ -38,8 +50,29 @@ class V4 implements CollectionInterface
         return $this;
     }
 
+    /**
+     * @param int $ip
+     * @return int|null
+     */
+    public function find(int $ip): ?int
+    {
+        return Range::search($ip, $this->list);
+    }
+
+    /**
+     * @param string $ip
+     * @return bool
+     */
     public function has(string $ip): bool
     {
         return null !== $this->find(ip2long($ip));
+    }
+
+    /**
+     * Flush the range list
+     */
+    public function flush(): void
+    {
+        $this->list = [];
     }
 }
