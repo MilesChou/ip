@@ -54,6 +54,28 @@ class V4Test extends TestCase
     /**
      * @test
      */
+    public function shouldReturnTrueWhenUsingLoopbackIpByAddCidr(): void
+    {
+        $this->target->addCidr('127.0.0.0/8');
+
+        $this->assertTrue($this->target->has('127.0.0.0'));
+        $this->assertTrue($this->target->has('127.255.255.255'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnTrueWhenUsingLoopbackIpByAddRange(): void
+    {
+        $this->target->addRange([2130706432, 2147483647]);
+
+        $this->assertTrue($this->target->has('127.0.0.0'));
+        $this->assertTrue($this->target->has('127.255.255.255'));
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnTrueWhenUsingPrivateIp(): void
     {
         $this->target->addPrivateIp();

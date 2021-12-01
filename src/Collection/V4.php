@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MilesChou\Ip\Collection;
 
+use InvalidArgumentException;
+use MilesChou\Ip\Cidr;
 use MilesChou\Ip\Range;
 
 class V4 implements CollectionInterface
@@ -19,9 +21,31 @@ class V4 implements CollectionInterface
      */
     public function add(array $list): V4
     {
-        $this->list = Range::sort($this->list + $list);
+        $this->list = Range::merge($this->list + $list);
 
         return $this;
+    }
+
+    /**
+     * @param string $cidr
+     * @return $this
+     */
+    public function addCidr(string $cidr): V4
+    {
+        return $this->add([Cidr::toRange($cidr)]);
+    }
+
+    /**
+     * @param array $range
+     * @return $this
+     */
+    public function addRange(array $range): V4
+    {
+        if (!Range::isValid($range)) {
+            throw new InvalidArgumentException('Invalid range');
+        }
+
+        return $this->add([$range]);
     }
 
     /**

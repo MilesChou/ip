@@ -4,6 +4,23 @@ namespace MilesChou\Ip;
 
 class Range
 {
+    public static function isValid($range): bool
+    {
+        if (!is_array($range)) {
+            return false;
+        }
+
+        if (count($range) !== 2) {
+            return false;
+        }
+
+        if (!is_int($range[0]) || !is_int($range[1])) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Merge list
      *
