@@ -99,4 +99,22 @@ class V4Test extends TestCase
 
         $this->assertFalse($this->target->has('127.0.0.1'));
     }
+
+    /**
+     * @test
+     */
+    public function shouldReturnWhenAddNewItem(): void
+    {
+        $this->target->addRange([1, 2]);
+
+        $this->assertTrue($this->target->hasLong(1));
+        $this->assertTrue($this->target->hasLong(2));
+
+        $this->target->addRange([3, 4]);
+
+        $this->assertTrue($this->target->hasLong(1));
+        $this->assertTrue($this->target->hasLong(2));
+        $this->assertTrue($this->target->hasLong(3));
+        $this->assertTrue($this->target->hasLong(4));
+    }
 }

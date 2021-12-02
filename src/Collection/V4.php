@@ -21,17 +21,17 @@ class V4 implements CollectionInterface
      */
     public function add(array $list): V4
     {
-        $map = array_map(function ($v) {
-            return Cidr::isValid($v) ?
-                Cidr::toRange($v) :
-                $v;
-        }, $list);
+        foreach ($list as $item) {
+            if (Cidr::isValid($item)) {
+                $item = Cidr::toRange($item);
+            } elseif (!Range::isValid($item)) {
+                continue;
+            }
 
-        $filtered = array_filter($map, function ($v) {
-            return Range::isValid($v);
-        });
+            $this->list[] = $item;
+        }
 
-        $this->list = Range::merge($this->list + array_values($filtered));
+        $this->list = Range::merge($this->list);
 
         return $this;
     }
@@ -84,6 +84,11 @@ class V4 implements CollectionInterface
         return $this;
     }
 
+    public function all(): array
+    {
+        return $this->list;
+    }
+
     /**
      * @param int $ip
      * @return int|null
@@ -99,7 +104,16 @@ class V4 implements CollectionInterface
      */
     public function has(string $ip): bool
     {
-        return null !== $this->find(ip2long($ip));
+        return $this->hasLong(ip2long($ip));
+    }
+
+    /**
+     * @param int $long
+     * @return bool
+     */
+    public function hasLong(int $long): bool
+    {
+        return null !== $this->find($long);
     }
 
     /**
