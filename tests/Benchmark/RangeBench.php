@@ -6,6 +6,9 @@ use MilesChou\Ip\Range;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
+use function array_map;
+use function range;
+
 /**
  * @BeforeMethods({"init"})
  */

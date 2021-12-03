@@ -6,6 +6,8 @@ use MilesChou\Ip\Collection\V4;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
+use function range;
+
 class V4Bench
 {
     /**
@@ -17,7 +19,7 @@ class V4Bench
         $collection = new V4();
 
         foreach (range(1, 100000) as $item) {
-            $collection->addRange([$item, $item]);
+            $collection->add($item, $item);
         }
     }
 }

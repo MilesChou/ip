@@ -2,6 +2,14 @@
 
 namespace MilesChou\Ip;
 
+use function array_pop;
+use function array_reduce;
+use function count;
+use function end;
+use function is_array;
+use function is_int;
+use function usort;
+
 class Range
 {
     public static function isValid($range): bool
@@ -15,6 +23,14 @@ class Range
         }
 
         if (!is_int($range[0]) || !is_int($range[1])) {
+            return false;
+        }
+
+        if ($range[0] > $range[1]) {
+            return false;
+        }
+
+        if ($range[0] < 0 || $range[1] > 4294967295) {
             return false;
         }
 

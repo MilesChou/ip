@@ -35,7 +35,7 @@ class V4Test extends TestCase
     public function shouldReturnTrueWhenIpInCustomizeRange(): void
     {
         // 2130706433 means 127.0.0.1
-        $this->target->add([[2130706433, 2130706433]]);
+        $this->target->addList([[2130706433, 2130706433]]);
 
         $this->assertTrue($this->target->has('127.0.0.1'));
     }
@@ -67,7 +67,7 @@ class V4Test extends TestCase
      */
     public function shouldReturnTrueWhenUsingLoopbackIpByAddRange(): void
     {
-        $this->target->addRange([2130706432, 2147483647]);
+        $this->target->add(2130706432, 2147483647);
 
         $this->assertTrue($this->target->has('127.0.0.0'));
         $this->assertTrue($this->target->has('127.255.255.255'));
@@ -91,7 +91,7 @@ class V4Test extends TestCase
     public function shouldReturnFalseWhenFlush(): void
     {
         // 2130706433 means 127.0.0.1
-        $this->target->add([[2130706433, 2130706433]]);
+        $this->target->addList([[2130706433, 2130706433]]);
 
         $this->assertTrue($this->target->has('127.0.0.1'));
 
@@ -105,12 +105,12 @@ class V4Test extends TestCase
      */
     public function shouldReturnWhenAddNewItem(): void
     {
-        $this->target->addRange([1, 2]);
+        $this->target->add(1, 2);
 
         $this->assertTrue($this->target->hasLong(1));
         $this->assertTrue($this->target->hasLong(2));
 
-        $this->target->addRange([3, 4]);
+        $this->target->add(3, 4);
 
         $this->assertTrue($this->target->hasLong(1));
         $this->assertTrue($this->target->hasLong(2));

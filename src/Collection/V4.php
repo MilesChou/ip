@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use MilesChou\Ip\Cidr;
 use MilesChou\Ip\Range;
 
+use function ip2long;
+
 class V4 implements CollectionInterface
 {
     /**
@@ -15,11 +17,31 @@ class V4 implements CollectionInterface
      */
     private $list = [];
 
+    public function add(int $start, int $end): CollectionInterface
+    {
+        $range = [$start, $end];
+
+        if (!Range::isValid($range)) {
+            throw new InvalidArgumentException('Invalid range');
+        }
+
+        return $this->addList([$range]);
+    }
+
+    /**
+     * @param string $cidr
+     * @return $this
+     */
+    public function addCidr(string $cidr): V4
+    {
+        return $this->addList([Cidr::toRange($cidr)]);
+    }
+
     /**
      * @param array $list
      * @return $this
      */
-    public function add(array $list): V4
+    public function addList(array $list): V4
     {
         foreach ($list as $item) {
             if (Cidr::isValid($item)) {
@@ -37,33 +59,11 @@ class V4 implements CollectionInterface
     }
 
     /**
-     * @param string $cidr
-     * @return $this
-     */
-    public function addCidr(string $cidr): V4
-    {
-        return $this->add([Cidr::toRange($cidr)]);
-    }
-
-    /**
-     * @param array $range
-     * @return $this
-     */
-    public function addRange(array $range): V4
-    {
-        if (!Range::isValid($range)) {
-            throw new InvalidArgumentException('Invalid range');
-        }
-
-        return $this->add([$range]);
-    }
-
-    /**
      * @see https://datatracker.ietf.org/doc/html/rfc1918
      */
     public function addPrivateIp(): self
     {
-        $this->add([
+        $this->addList([
             [167772160, 184549375],     // 10.0.0.0     -   10.255.255.255
             [2886729728, 2887778303],   // 172.16.0.0   -   172.31.255.255
             [3232235520, 3232301055],   // 192.168.0.0  -   192.168.255.255
@@ -77,7 +77,7 @@ class V4 implements CollectionInterface
      */
     public function addLoopbackIp(): self
     {
-        $this->add([
+        $this->addList([
             [2130706432, 2147483647],   // 127.0.0.0    -   127.255.255.255
         ]);
 

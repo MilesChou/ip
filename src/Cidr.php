@@ -4,6 +4,12 @@ namespace MilesChou\Ip;
 
 use InvalidArgumentException;
 
+use function explode;
+use function filter_var;
+use function ip2long;
+use function is_string;
+use function pow;
+
 class Cidr
 {
     public static function isValid($cidr): bool
