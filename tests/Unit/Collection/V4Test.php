@@ -103,7 +103,7 @@ class V4Test extends TestCase
     /**
      * @test
      */
-    public function shouldReturnWhenAddNewItem(): void
+    public function shouldReturnTrueWhenAddNewItem(): void
     {
         $this->target->add(1, 2);
 
@@ -116,5 +116,20 @@ class V4Test extends TestCase
         $this->assertTrue($this->target->hasLong(2));
         $this->assertTrue($this->target->hasLong(3));
         $this->assertTrue($this->target->hasLong(4));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnFalseWhenBlock(): void
+    {
+        $this->target->add(1, 5);
+        $this->target->block(3, 3);
+
+        $this->assertTrue($this->target->hasLong(1));
+        $this->assertTrue($this->target->hasLong(2));
+        $this->assertFalse($this->target->hasLong(3));
+        $this->assertTrue($this->target->hasLong(4));
+        $this->assertTrue($this->target->hasLong(5));
     }
 }

@@ -17,6 +17,11 @@ class V4 implements CollectionInterface
      */
     private $list = [];
 
+    /**
+     * @var array
+     */
+    private $block = [];
+
     public function add(int $start, int $end): CollectionInterface
     {
         $range = [$start, $end];
@@ -89,12 +94,30 @@ class V4 implements CollectionInterface
         return $this->list;
     }
 
+    public function block(int $start, int $end): CollectionInterface
+    {
+        $range = [$start, $end];
+
+        if (!Range::isValid($range)) {
+            throw new InvalidArgumentException('Invalid range');
+        }
+
+        $this->block[] = $range;
+        $this->block = Range::merge($this->block);
+
+        return $this;
+    }
+
     /**
      * @param int $ip
      * @return int|null
      */
     public function find(int $ip): ?int
     {
+        if (null !== Range::search($ip, $this->block)) {
+            return null;
+        }
+
         return Range::search($ip, $this->list);
     }
 
