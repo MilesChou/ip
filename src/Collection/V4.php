@@ -146,4 +146,13 @@ class V4 implements CollectionInterface
     {
         $this->list = [];
     }
+
+    /**
+     * @param string $ip
+     * @return bool
+     */
+    public function missing(string $ip): bool
+    {
+        return !$this->has($ip);
+    }
 }

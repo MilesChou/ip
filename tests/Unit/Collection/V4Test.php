@@ -22,11 +22,11 @@ class V4Test extends TestCase
     /**
      * @test
      */
-    public function shouldReturnFalseWhenNewObject(): void
+    public function shouldMissingWhenNewObject(): void
     {
         $target = new V4();
 
-        $this->assertFalse($target->has('127.0.0.1'));
+        $this->assertTrue($target->missing('127.0.0.1'));
     }
 
     /**
